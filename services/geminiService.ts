@@ -8,17 +8,18 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     
     const response: GenerateContentResponse = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: message,
+      model: 'gemini-1.5-flash',
+      contents: [{ role: 'user', parts: [{ text: message }] }],
       config: {
-        systemInstruction: `Anda adalah 'MyJSS', Pembantu Digital Pintar bagi Jabatan Sains Sosial (JSS), IPG Kampus Tawau, Sabah.
+        systemInstruction: {
+          parts: [{ text: `Anda adalah 'MyJSS', Pembantu Digital Pintar bagi Jabatan Sains Sosial (JSS), IPG Kampus Tawau, Sabah.
         
         IDENTITI JABATAN:
         - Ketua Jabatan: Dr. Ahmadi bin Abd Wahab.
-        - Kepakaran: Sejarah, Geografi, Pendidikan Muzik, dan Pendidikan Seni Visual.
+        - Kepakaran: Sejarah, Geografi.
         - Misi: Melahirkan guru Rabbani yang kompeten.
         
         GAYA BAHASA:
@@ -29,7 +30,8 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
         KONTEKS PENTING:
         - Portal ini adalah platform rasmi jabatan untuk penyampaian maklumat digital.
         - Jika pengguna bertanya tentang pendaftaran, maklumkan tentang PISMP Sejarah 2026.
-        - Lokasi kami di Balung, Tawau.`,
+        - Lokasi kami di Balung, Tawau.` }]
+        },
       },
     });
 
